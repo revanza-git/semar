@@ -15,7 +15,7 @@ const Footer = () => {
         >
           Nusantara Regas
         </Link>{" "}
-        | Semar Version 2
+        | Semar Version 2.0.0
       </Typography>
     </Box>
   );
