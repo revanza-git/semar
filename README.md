@@ -34,7 +34,15 @@ npm install
 3. **Configure Environment Variables**
    Create a `.env` file in the root directory and add the necessary environment variables. Refer to `.env.example` for the required variables.
 
-4. **Run Database Migrations**
+4. **Configure Folder Upload Path**
+   Create folders for uploads. Run the following commands to create the necessary directories inside the `inetpub` directory:
+
+```sh
+mkdir -p inetpub/data/uploads/semar
+mkdir -p inetpub/data/template/semar
+```
+
+5. **Run Database Migrations**
    Ensure your database is set up and configured correctly. Then run:
 
 ```sh
@@ -52,14 +60,14 @@ npm start
 
 ## Contributing
 
-We welcome contributions! Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+We welcome contributions! Please contact your IT support if you want to contribute.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is proprietary of Nusantara Regas Corporation.
 
 ## Contact
 
-For any questions or support, please contact [support@semaradmin.com](mailto:support@semaradmin.com).
+For any questions or support, please contact [it.supportnr@pertamina.com](mailto:it.supportnr@pertamina.com).
 
 Thank you for using SEMAR Admin!
