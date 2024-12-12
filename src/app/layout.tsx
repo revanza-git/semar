@@ -2,9 +2,7 @@
 import { baselightTheme } from "@/utils/theme/DefaultColors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { SessionProvider, getSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,

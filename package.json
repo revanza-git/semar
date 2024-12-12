@@ -1,5 +1,5 @@
 {
-  "name": "tugboat-admin",
+  "name": "semar",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/lab": "5.0.0-alpha.138",
     "@mui/material": "5.14.3",
+    "@mui/styles": "^6.1.10",
     "@tabler/icons-react": "2.30.0",
     "@types/node": "20.4.5",
     "@types/react": "18.2.18",

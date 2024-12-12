@@ -2,14 +2,8 @@ import React from "react";
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { useTheme } from "@mui/material/styles";
-import {
-  Stack,
-  Typography,
-  Avatar,
-  Box,
-} from "@mui/material";
-import DashboardCard from "../shared/DashboardCard";
-
+import { Stack, Typography, Avatar, Box } from "@mui/material";
+import DashboardCard from "../../shared/DashboardCard";
 
 const SalesOverview = () => {
   // chart color
@@ -53,7 +47,6 @@ const SalesOverview = () => {
       min: 100,
       max: 400,
       tickAmount: 3,
-
     },
 
     stroke: {
@@ -74,7 +67,6 @@ const SalesOverview = () => {
 
   return (
     <>
-
       <DashboardCard
         title="Sales Overview"
         subtitle="Ample Admin Vs Pixel Admin"

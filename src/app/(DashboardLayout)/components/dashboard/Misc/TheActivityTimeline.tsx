@@ -23,9 +23,9 @@ import TimelineDot from "@mui/lab/TimelineDot";
 
 import { IconHeartFilled, IconMessage } from "@tabler/icons-react";
 
-import CustomFormLabel from "../forms/theme-elements/CustomFormLabel";
-import CustomTextField from "../forms/theme-elements/CustomTextField";
-import CustomSelect from "../forms/theme-elements/CustomSelect";
+import CustomFormLabel from "../../forms/theme-elements/CustomFormLabel";
+import CustomTextField from "../../forms/theme-elements/CustomTextField";
+import CustomSelect from "../../forms/theme-elements/CustomSelect";
 
 const ActivityTimeline = () => {
   const [value, setValue] = React.useState("1");

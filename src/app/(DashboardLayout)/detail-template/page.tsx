@@ -25,24 +25,20 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  fetchSemarDataById,
-  updateSemarData,
-  downloadSemarFile,
-  uploadSemarFile,
+  fetchSemarTemplateDataById,
+  updateSemarTemplateData,
+  downloadTemplateFile,
+  uploadSemarTemplateFile,
   fetchSemarTypes,
-  fetchDepartments,
-  fetchSemarLevels,
-} from "../components/dashboard/Report/api/semar";
+} from "../template/api/template";
+import { template } from "lodash";
 
 const Details = () => {
   const router = useRouter();
   const params: any = useSearchParams();
   const id = params.get("id");
-
-  const [semarData, setSemarData] = useState<any>(null);
+  const [templateData, setTemplateData] = useState<any>(null);
   const [semarTypes, setSemarTypes] = useState<any[]>([]);
-  const [departments, setDepartments] = useState<any[]>([]);
-  const [semarLevels, setSemarLevels] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,8 +47,8 @@ const Details = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchSemarDataById(id);
-        setSemarData(data);
+        const data = await fetchSemarTemplateDataById(id);
+        setTemplateData(data);
       } catch (error) {
         setError("Failed to fetch data");
       }
@@ -72,44 +68,14 @@ const Details = () => {
     fetchTypes();
   }, []);
 
-  useEffect(() => {
-    const fetchDepartmentsData = async () => {
-      try {
-        const departmentsData = await fetchDepartments();
-        setDepartments(departmentsData);
-      } catch (error) {
-        setError("Failed to fetch departments");
-      }
-    };
-    fetchDepartmentsData();
-  }, []);
-
-  useEffect(() => {
-    const fetchSemarLevelsData = async () => {
-      try {
-        const semarLevelsData = await fetchSemarLevels();
-        setSemarLevels(semarLevelsData);
-      } catch (error) {
-        setError("Failed to fetch semar levels");
-      }
-    };
-    fetchSemarLevelsData();
-  }, []);
-
-  useEffect(() => {
-    if (semarData && semarData.type !== 5) {
-      setSemarData((prevData: any) => ({ ...prevData, semarLevel: 0 }));
-    }
-  }, [semarData?.type]);
-
   const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSemarData({ ...semarData, [name]: value });
+    setTemplateData({ ...templateData, [name]: value });
   };
 
   const handleSelectChange = (e: SelectChangeEvent<any>) => {
     const { name, value } = e.target;
-    setSemarData({ ...semarData, [name]: value });
+    setTemplateData({ ...templateData, [name]: value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,17 +89,13 @@ const Details = () => {
     setIsSubmitting(true);
     try {
       const updatedData = {
-        ...semarData,
-        expiredNotification: 0,
-        classification: 2,
-        fileName: semarData.fileName,
-        contentType: semarData.contentType,
-        creator: semarData.creator,
+        ...templateData,
+        modifiedDate: new Date().toISOString(), // Set modifiedDate to current time
       };
-      await updateSemarData(id, updatedData);
+      await updateSemarTemplateData(id, updatedData);
 
       if (file) {
-        await uploadSemarFile(id, file);
+        await uploadSemarTemplateFile(id, file);
         setSuccess("Data and File Successfully Saved");
       } else {
         setSuccess("Data Successfully Saved");
@@ -157,11 +119,11 @@ const Details = () => {
 
   const handleDownload = async () => {
     try {
-      const blob = await downloadSemarFile(id);
+      const blob = await downloadTemplateFile(id);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = semarData.fileName;
+      a.download = templateData.fileName;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -172,10 +134,10 @@ const Details = () => {
     }
   };
 
-  if (!semarData) return <div>Loading...</div>;
+  if (!templateData) return <div>Loading...</div>;
 
-  const fileNameDisplay = semarData.fileName
-    ? `File: ${semarData.fileName}`
+  const fileNameDisplay = templateData.fileName
+    ? `File: ${templateData.fileName}`
     : "File: none";
 
   return (
@@ -186,8 +148,10 @@ const Details = () => {
             <Link color="inherit" onClick={() => router.push("/")}>
               Home
             </Link>
-            <Typography color="textPrimary">Detail</Typography>
-            <Typography color="textPrimary">{id}</Typography>
+            <Typography color="textPrimary">Edit</Typography>
+            <Typography color="textPrimary">
+              {templateData.semarTemplateCode}
+            </Typography>
           </Breadcrumbs>
           <Grid container spacing={3} mt={2}>
             <Grid item xs={12} lg={12}>
@@ -205,13 +169,27 @@ const Details = () => {
                 <Alert severity="success">{success}</Alert>
               </Grid>
             )}
+
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="type">Type</FormLabel>
+                <FormLabel htmlFor="namaTemplate">Template Name</FormLabel>
+                <TextField
+                  id="namaTemplate"
+                  name="namaTemplate"
+                  value={templateData.namaTemplate}
+                  onChange={handleTextFieldChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth margin="normal" variant="outlined">
+                <FormLabel htmlFor="tipeDokumen">Document Type</FormLabel>
                 <Select
-                  id="type"
-                  name="type"
-                  value={semarData.type}
+                  id="tipeDokumen"
+                  name="tipeDokumen"
+                  value={templateData.tipeDokumen}
                   onChange={handleSelectChange}
                   fullWidth
                   variant="outlined"
@@ -226,11 +204,12 @@ const Details = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="noDocument">No Document</FormLabel>
+                <FormLabel htmlFor="tahun">Year</FormLabel>
                 <TextField
-                  id="noDocument"
-                  name="noDocument"
-                  value={semarData.noDocument}
+                  id="tahun"
+                  name="tahun"
+                  type="number"
+                  value={templateData.tahun}
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
@@ -239,113 +218,12 @@ const Details = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="title">Title</FormLabel>
+                <FormLabel htmlFor="revisi">Revision</FormLabel>
                 <TextField
-                  id="title"
-                  name="title"
-                  value={semarData.title}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            {semarData.type === 5 && (
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="semarLevel">Semar Level</FormLabel>
-                  <Select
-                    id="semarLevel"
-                    name="semarLevel"
-                    value={semarData.semarLevel}
-                    onChange={handleSelectChange}
-                    fullWidth
-                    variant="outlined"
-                  >
-                    {semarLevels.map((level) => (
-                      <MenuItem
-                        key={level.semarLevelID}
-                        value={level.semarLevelID}
-                      >
-                        {level.deskripsi}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-            )}
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="owner">Fungsi</FormLabel>
-                <Select
-                  id="owner"
-                  name="owner"
-                  value={semarData.owner}
-                  onChange={handleSelectChange}
-                  fullWidth
-                  variant="outlined"
-                >
-                  {departments.map((department) => (
-                    <MenuItem
-                      key={department.departmentID}
-                      value={department.departmentID}
-                    >
-                      {department.deskripsi}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="description">Description</FormLabel>
-                <TextField
-                  id="description"
-                  name="description"
-                  value={semarData.description}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                  multiline
-                  rows={4} // You can adjust the number of rows as needed
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="publishDate">Publish Date</FormLabel>
-                <TextField
-                  id="publishDate"
-                  name="publishDate"
-                  type="datetime-local"
-                  value={semarData.publishDate}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="expiredDate">Expired Date</FormLabel>
-                <TextField
-                  id="expiredDate"
-                  name="expiredDate"
-                  type="datetime-local"
-                  value={semarData.expiredDate}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="revision">Revision</FormLabel>
-                <TextField
-                  id="revision"
-                  name="revision"
-                  value={semarData.revision}
+                  id="revisi"
+                  name="revisi"
+                  type="number"
+                  value={templateData.revisi}
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
@@ -376,7 +254,7 @@ const Details = () => {
                 <RadioGroup
                   id="status"
                   name="status"
-                  value={semarData.status}
+                  value={templateData.status}
                   onChange={handleSelectChange}
                   row // This makes the radio buttons appear in a row
                 >

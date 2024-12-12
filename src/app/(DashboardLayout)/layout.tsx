@@ -1,5 +1,13 @@
 "use client";
-import { styled, Container, Box, useTheme } from "@mui/material";
+import {
+  styled,
+  Container,
+  Box,
+  useTheme,
+  Alert,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
 import Header from "@/app/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/(DashboardLayout)/layout/sidebar/Sidebar";
@@ -33,6 +41,7 @@ export default function RootLayout({
 }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isAlertOpen, setAlertOpen] = useState(true);
   const theme = useTheme();
   const { data: session, status } = useSession();
 
@@ -62,7 +71,7 @@ export default function RootLayout({
         className="page-wrapper"
         sx={{
           [theme.breakpoints.up("lg")]: {
-            ml: `270px`,
+            ml: `200px`,
           },
         }}
       >
@@ -87,7 +96,28 @@ export default function RootLayout({
           {/* ------------------------------------------- */}
           {/* Page Route */}
           {/* ------------------------------------------- */}
-          <Box mt={4} sx={{ minHeight: "calc(100vh - 170px)" }}>
+          <Box mt={2} sx={{ minHeight: "calc(100vh - 170px)" }}>
+            {isAlertOpen && (
+              <Alert
+                severity="info"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => setAlertOpen(false)}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ marginBottom: 2 }} // Add margin bottom
+              >
+                Pemberitahuan! Seluruh dokumen di dalam Portal merupakan dokumen
+                terkendali. dokumen yang diunduh dan atau dicetak dari media
+                intranet/Portal Peraturan Internal & Eksternal menjadi dokumen
+                tidak terkendali.
+              </Alert>
+            )}
             {children}
           </Box>
           {/* ------------------------------------------- */}

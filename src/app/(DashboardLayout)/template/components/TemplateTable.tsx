@@ -11,41 +11,38 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import ActivityTableRow from "./ActivityTableRow";
+import TemplateTableRow from "./TemplateTableRow";
 
-interface ActivityTableProps {
+interface TemplateTableProps {
   title: string;
-  semarData: any[];
-  router: any;
-  handleDeleteSemarActivity: (id: string) => void;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  fetchData: (dataLimit?: number) => void;
   semarTypes: any[];
-  departments: any[];
-  pageSize: number;
+  router: any;
+  handleDeleteSemarTemplate: (semarTemplateCode: any) => void;
+  templateData: any[];
+  totalCount: number;
   currentPage: number;
   setCurrentPage: (page: number) => void;
-  totalCount: number;
-  fetchData: (dataLimit?: number) => void;
+  pageSize: number;
   dataLimit?: number;
+  tipeDokumen?: number;
 }
 
-const ActivityTable: React.FC<ActivityTableProps> = ({
+const TemplateTable: React.FC<TemplateTableProps> = ({
   title,
-  semarData,
-  router,
-  handleDeleteSemarActivity,
+  fetchData,
   semarTypes,
-  departments,
-  pageSize,
+  router,
+  handleDeleteSemarTemplate,
+  templateData,
+  totalCount,
   currentPage,
   setCurrentPage,
-  totalCount,
-  fetchData,
+  pageSize,
   dataLimit,
 }) => {
-  const sortedData = Array.isArray(semarData)
-    ? semarData.sort(
+  const sortedData = Array.isArray(templateData)
+    ? templateData.sort(
         (a, b) =>
           new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
       )
@@ -75,7 +72,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
         gutterBottom
         sx={{ backgroundColor: "red", color: "white", padding: "8px" }}
       >
-        {title}
+        {title} {dataLimit ? `TOP ${dataLimit}` : ""}
       </Typography>
 
       <TableContainer component={Paper} sx={{ border: "2px solid red" }}>
@@ -84,22 +81,22 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
             <TableRow>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  ID
+                  Template Code
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  Jenis
+                  Tipe
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  Fungsi
+                  Nama Template
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  Nomor
+                  Tahun
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
@@ -109,46 +106,25 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  Perihal
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-                <Typography color="textSecondary" variant="h6">
-                  TMT Berlaku
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-                <Typography color="textSecondary" variant="h6">
-                  TMT Berakhir
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-                <Typography color="textSecondary" variant="h6">
-                  Deskripsi
-                </Typography>
-              </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-                <Typography color="textSecondary" variant="h6">
                   Status
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
-                  Actions
+                  Action
                 </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentItems.map((activity, index) => (
-              <ActivityTableRow
-                key={activity.semarID}
-                activity={activity}
+            {currentItems.map((template, index) => (
+              <TemplateTableRow
+                key={template.semarTemplateCode}
+                template={template}
+                semarTypes={semarTypes}
                 index={index}
                 router={router}
-                handleDeleteSemarActivity={handleDeleteSemarActivity}
-                semarTypes={semarTypes}
-                departments={departments}
+                handleDeleteSemarTemplate={handleDeleteSemarTemplate}
               />
             ))}
           </TableBody>
@@ -171,4 +147,4 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
   );
 };
 
-export default ActivityTable;
+export default TemplateTable;

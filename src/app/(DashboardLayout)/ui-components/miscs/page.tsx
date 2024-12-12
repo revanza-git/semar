@@ -1,12 +1,12 @@
-'use client'
-import { Grid, Box } from '@mui/material';
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
+"use client";
+import { Grid, Box } from "@mui/material";
+import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 // components
-import SalesOverview from '@/app/(DashboardLayout)/components/dashboard/TheSalesOverview';
-import Blogcard from '@/app/(DashboardLayout)/components/dashboard/TheBlogCard';
-import ProfileCard from "@/app/(DashboardLayout)/components/dashboard/TheProfileCard";
-import MyContacts from "@/app/(DashboardLayout)/components/dashboard/TheMyContacts";
-import ActivityTimeline from "@/app/(DashboardLayout)/components/dashboard/TheActivityTimeline";
+import SalesOverview from "@/app/(DashboardLayout)/components/dashboard/Misc/TheSalesOverview";
+import Blogcard from "@/app/(DashboardLayout)/components/dashboard/Misc/TheBlogCard";
+import ProfileCard from "@/app/(DashboardLayout)/components/dashboard/Misc/TheProfileCard";
+import MyContacts from "@/app/(DashboardLayout)/components/dashboard/Misc/TheMyContacts";
+import ActivityTimeline from "@/app/(DashboardLayout)/components/dashboard/Misc/TheActivityTimeline";
 const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
@@ -34,7 +34,7 @@ const Dashboard = () => {
         </Grid>
       </Box>
     </PageContainer>
-  )
-}
+  );
+};
 
 export default Dashboard;

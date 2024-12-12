@@ -23,23 +23,30 @@ import {
   Radio,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
-  fetchSemarDataById,
-  updateSemarData,
-  downloadSemarFile,
+  createSemarData,
   uploadSemarFile,
   fetchSemarTypes,
   fetchDepartments,
   fetchSemarLevels,
 } from "../components/dashboard/Report/api/semar";
 
-const Details = () => {
+const Create = () => {
   const router = useRouter();
-  const params: any = useSearchParams();
-  const id = params.get("id");
 
-  const [semarData, setSemarData] = useState<any>(null);
+  const [semarData, setSemarData] = useState<any>({
+    type: "",
+    noDocument: "",
+    title: "",
+    semarLevel: "",
+    owner: "",
+    description: "",
+    publishDate: "",
+    expiredDate: "",
+    revision: "",
+    status: 1,
+  });
   const [semarTypes, setSemarTypes] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
   const [semarLevels, setSemarLevels] = useState<any[]>([]);
@@ -47,18 +54,6 @@ const Details = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchSemarDataById(id);
-        setSemarData(data);
-      } catch (error) {
-        setError("Failed to fetch data");
-      }
-    };
-    fetchData();
-  }, [id]);
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -121,8 +116,28 @@ const Details = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
+
+    // Validation
+    if (
+      !semarData.type ||
+      !semarData.noDocument ||
+      !semarData.title ||
+      !semarData.owner ||
+      !semarData.description ||
+      !semarData.publishDate ||
+      !semarData.expiredDate ||
+      !semarData.revision ||
+      !file
+    ) {
+      setError(
+        "Please fill in all required fields, including uploading a file."
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      const updatedData = {
+      const newData = {
         ...semarData,
         expiredNotification: 0,
         classification: 2,
@@ -130,19 +145,20 @@ const Details = () => {
         contentType: semarData.contentType,
         creator: semarData.creator,
       };
-      await updateSemarData(id, updatedData);
+      const createdData = await createSemarData(newData);
 
-      if (file) {
-        await uploadSemarFile(id, file);
+      try {
+        await uploadSemarFile(createdData.semarID, file);
         setSuccess("Data and File Successfully Saved");
-      } else {
-        setSuccess("Data Successfully Saved");
+      } catch (uploadError) {
+        setError("Data saved, but file upload failed.");
       }
+
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       setTimeout(() => {
         router.back();
-      }, 2000);
+      }, 1000);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -155,29 +171,6 @@ const Details = () => {
     }
   };
 
-  const handleDownload = async () => {
-    try {
-      const blob = await downloadSemarFile(id);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = semarData.fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      setError("Failed to download file");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  if (!semarData) return <div>Loading...</div>;
-
-  const fileNameDisplay = semarData.fileName
-    ? `File: ${semarData.fileName}`
-    : "File: none";
-
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -186,8 +179,7 @@ const Details = () => {
             <Link color="inherit" onClick={() => router.push("/")}>
               Home
             </Link>
-            <Typography color="textPrimary">Detail</Typography>
-            <Typography color="textPrimary">{id}</Typography>
+            <Typography color="textPrimary">Create</Typography>
           </Breadcrumbs>
           <Grid container spacing={3} mt={2}>
             <Grid item xs={12} lg={12}>
@@ -215,6 +207,7 @@ const Details = () => {
                   onChange={handleSelectChange}
                   fullWidth
                   variant="outlined"
+                  required
                 >
                   {semarTypes.map((type) => (
                     <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
@@ -234,6 +227,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  required
                 />
               </FormControl>
             </Grid>
@@ -247,6 +241,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  required
                 />
               </FormControl>
             </Grid>
@@ -261,6 +256,7 @@ const Details = () => {
                     onChange={handleSelectChange}
                     fullWidth
                     variant="outlined"
+                    required
                   >
                     {semarLevels.map((level) => (
                       <MenuItem
@@ -284,6 +280,7 @@ const Details = () => {
                   onChange={handleSelectChange}
                   fullWidth
                   variant="outlined"
+                  required
                 >
                   {departments.map((department) => (
                     <MenuItem
@@ -308,6 +305,7 @@ const Details = () => {
                   variant="outlined"
                   multiline
                   rows={4} // You can adjust the number of rows as needed
+                  required
                 />
               </FormControl>
             </Grid>
@@ -322,6 +320,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  required
                 />
               </FormControl>
             </Grid>
@@ -336,6 +335,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  required
                 />
               </FormControl>
             </Grid>
@@ -349,6 +349,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  required
                 />
               </FormControl>
             </Grid>
@@ -365,6 +366,7 @@ const Details = () => {
                       variant="outlined"
                       InputLabelProps={{ shrink: true }}
                       inputProps={{ accept: "application/pdf" }}
+                      required
                     />
                   </Grid>
                 </Grid>
@@ -393,24 +395,6 @@ const Details = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body1">{fileNameDisplay}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Box textAlign="right">
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleDownload}
-                    >
-                      Download
-                    </Button>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Grid>
             <Grid item xs={12}>
               <Box textAlign="right" mt={2}>
                 <Button
@@ -430,4 +414,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default Create;

@@ -2,6 +2,7 @@ import {
   IconBoxMultiple,
   IconCircleDot,
   IconHome,
+  IconFiles,
   IconInfoCircle,
   IconLayout,
   IconLayoutGrid,
@@ -17,9 +18,27 @@ import { uniqueId } from "lodash";
 const Menuitems = [
   {
     id: uniqueId(),
-    title: "Tugboat",
+    title: "Home",
     icon: IconHome,
     href: "/",
+  },
+  {
+    id: uniqueId(),
+    title: "Surat Keputusan",
+    icon: IconFiles,
+    href: "/sk",
+  },
+  {
+    id: uniqueId(),
+    title: "Sistem Tata Kerja",
+    icon: IconFiles,
+    href: "/stk",
+  },
+  {
+    id: uniqueId(),
+    title: "Template",
+    icon: IconFiles,
+    href: "/template",
   },
 ];
 
