@@ -43,13 +43,9 @@ mkdir -p inetpub/data/template/semar
 ```
 
 5. **Run Database Migrations**
-   Ensure your database is set up and configured correctly. Then run:
+   Contact IT of Nusantara Regas for Database Migration.
 
-```sh
-npm run migrate
-```
-
-5. **Start the Development Server**
+6. **Start the Development Server**
 
 ```sh
 npm start
