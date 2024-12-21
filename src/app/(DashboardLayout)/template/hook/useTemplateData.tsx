@@ -13,7 +13,7 @@ interface SemarTypes {
 const useTemplateData = () => {
   const [templateData, setTemplateData] = useState([]);
   const [year, setYear] = useState<number | undefined>();
-  const [status, setStatus] = useState<string | undefined>();
+  const [docStatus, setDocStatus] = useState(""); // Rename status to docStatus
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [namaTemplate, setNamaTemplate] = useState("");
@@ -31,7 +31,7 @@ const useTemplateData = () => {
         namaTemplate,
         year,
         tipeDokumen,
-        status
+        docStatus
       );
 
     setTemplateData(templateDataResult);
@@ -43,7 +43,7 @@ const useTemplateData = () => {
     namaTemplate,
     year,
     tipeDokumen,
-    status,
+    docStatus,
   ]);
 
   useEffect(() => {
@@ -74,8 +74,8 @@ const useTemplateData = () => {
     year,
     setYear: resetPageAndFetchData(setYear, fetchData),
     fetchData,
-    status,
-    setStatus: resetPageAndFetchData(setStatus, fetchData),
+    docStatus,
+    setDocStatus: resetPageAndFetchData(setDocStatus, fetchData),
     currentPage,
     setCurrentPage,
     totalCount,

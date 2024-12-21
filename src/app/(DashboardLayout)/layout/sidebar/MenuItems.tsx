@@ -1,16 +1,8 @@
 import {
-  IconBoxMultiple,
-  IconCircleDot,
   IconHome,
   IconFiles,
-  IconInfoCircle,
-  IconLayout,
-  IconLayoutGrid,
-  IconPhoto,
-  IconPoint,
-  IconStar,
-  IconTable,
   IconUser,
+  IconSettingsFilled,
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -39,6 +31,20 @@ const Menuitems = [
     title: "Template",
     icon: IconFiles,
     href: "/template",
+  },
+  {
+    id: uniqueId(),
+    title: "Settings",
+    icon: IconSettingsFilled,
+    href: "#",
+    subItems: [
+      {
+        id: uniqueId(),
+        title: "PIC",
+        icon: IconUser,
+        href: "/settings/pic",
+      },
+    ],
   },
 ];
 

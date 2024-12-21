@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-
-import { Box, Menu, Avatar, Button, IconButton } from "@mui/material";
+import {
+  Box,
+  Menu,
+  Avatar,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -68,13 +74,26 @@ const Profile = () => {
           },
         }}
       >
-        {!loading && session && <div>Welcome, {session?.user?.name ?? ""}</div>}
+        {!loading && session && (
+          <Box p={2}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+              Selamat Datang, {session?.name ?? ""}
+            </Typography>
+            <Typography variant="body1" sx={{ color: "gray" }}>
+              Role: {session?.role === "AdminQM" ? "Admin SEMAR" : "User"}
+            </Typography>
+            <Typography variant="body1" sx={{ color: "gray" }}>
+              Fungsi: {session?.deskripsi ?? ""}
+            </Typography>
+          </Box>
+        )}
         <Box mt={3}>
           <Button
             fullWidth
             variant="contained"
             color="primary"
             onClick={handleLogout}
+            sx={{ fontWeight: "bold" }}
           >
             Logout
           </Button>

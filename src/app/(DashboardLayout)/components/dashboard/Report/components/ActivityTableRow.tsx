@@ -17,6 +17,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { downloadSemarFile } from "../api/semar";
 import { formatDate } from "../../../../../../utils/formatDate";
+import { useSession } from "next-auth/react";
 
 const ActivityTableRow = React.memo(
   ({
@@ -34,6 +35,7 @@ const ActivityTableRow = React.memo(
     semarTypes: any[];
     departments: any[];
   }) => {
+    const { data: session } = useSession();
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteActivityId, setDeleteActivityId] = useState<string | null>(
@@ -182,9 +184,12 @@ const ActivityTableRow = React.memo(
               >
                 View
               </MenuItem>
-              <MenuItem onClick={() => handleOpenDialog(activity.semarID)}>
-                Delete
-              </MenuItem>
+              {(session?.role === "AdminQM" ||
+                session?.department === activity.owner) && (
+                <MenuItem onClick={() => handleOpenDialog(activity.semarID)}>
+                  Delete
+                </MenuItem>
+              )}
               <MenuItem onClick={() => handleDownloadFile(activity.semarID)}>
                 Download File
               </MenuItem>

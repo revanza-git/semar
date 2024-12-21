@@ -1,22 +1,11 @@
 // Report/Page.tsx
 import React, { useState, useEffect } from "react";
-import {
-  Alert,
-  IconButton,
-  Box,
-  TextField,
-  Button,
-  Grid,
-  Breadcrumbs,
-  Link,
-  Typography,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Box, TextField, Button, Grid, Breadcrumbs, Link } from "@mui/material";
 import BaseCard from "../../shared/DashboardCard";
 import ActivityTable from "./components/ActivityTable"; // Ensure this path is correct
 import useSemarData from "./hooks/useSemarData";
 import { useRouter } from "next/navigation"; // Corrected import based on provided context
-
+import { useSession } from "next-auth/react";
 const Page = () => {
   const router = useRouter(); // Corrected based on standard Next.js routing
   const [open, setOpen] = useState(true);
@@ -45,9 +34,12 @@ const Page = () => {
     totalCountNewSTK,
   } = useSemarData();
 
+  const { data: session, status } = useSession();
+
   useEffect(() => {
     setPageSize(3);
     setDataLimit(10);
+    console.log(session);
   }, [setPageSize, setDataLimit]);
 
   const handleAddNewDocument = () => {

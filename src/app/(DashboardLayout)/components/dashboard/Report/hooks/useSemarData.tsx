@@ -43,6 +43,9 @@ const useSemarData = () => {
   const [totalCountNewSTK, setTotalCountNewSTK] = useState(0);
   const [dataLimit, setDataLimit] = useState(0);
   const [pageSize, setPageSize] = useState(0);
+  const [selectedSemarType, setSelectedSemarType] = useState<number | null>(
+    null
+  ); // New state for semarType filter
 
   const fetchDataSK = useCallback(async () => {
     const { data: skDataResult, totalCount: totalCount } = await fetchSemarData(
@@ -97,7 +100,7 @@ const useSemarData = () => {
         startDate,
         endDate,
         searchInput,
-        [2, 3, 4],
+        selectedSemarType ? [selectedSemarType] : [2, 3, 4], // Use selectedSemarType filter
         noDocument,
         title,
         semarLevel,
@@ -133,6 +136,7 @@ const useSemarData = () => {
     semarLevel,
     owner,
     status,
+    selectedSemarType, // Add selectedSemarType to dependencies
   ]);
 
   useEffect(() => {
@@ -142,6 +146,12 @@ const useSemarData = () => {
     fetchDepartments().then(setDepartments);
     fetchSemarLevels().then(setSemarLevels);
   }, [fetchDataSK, fetchDataSTK]);
+
+  const handleSetSelectedSemarType = (value: number | null) => {
+    setSelectedSemarType(value);
+    setCurrentPageSTK(1); // Reset the page to 1
+    fetchDataSTK(); // Fetch data based on the new filter
+  };
 
   const handleDeleteSemarActivity = async (idSemarActivity: any) => {
     try {
@@ -166,26 +176,26 @@ const useSemarData = () => {
     skNewData,
     stkNewData,
     searchInput,
-    setSearchInput: resetPageAndFetchData(setSearchInput, fetchDataSK),
+    setSearchInput: resetPageAndFetchData(setSearchInput, fetchDataSTK),
     startDate,
-    setStartDate: resetPageAndFetchData(setStartDate, fetchDataSK),
+    setStartDate: resetPageAndFetchData(setStartDate, fetchDataSTK),
     endDate,
-    setEndDate: resetPageAndFetchData(setEndDate, fetchDataSK),
+    setEndDate: resetPageAndFetchData(setEndDate, fetchDataSTK),
     fetchDataSK,
     fetchDataSTK,
     handleDeleteSemarActivity,
     semarTypes,
     departments,
     noDocument,
-    setNoDocument: resetPageAndFetchData(setNoDocument, fetchDataSK),
+    setNoDocument: resetPageAndFetchData(setNoDocument, fetchDataSTK),
     title,
-    setTitle: resetPageAndFetchData(setTitle, fetchDataSK),
+    setTitle: resetPageAndFetchData(setTitle, fetchDataSTK),
     semarLevel,
-    setSemarLevel: resetPageAndFetchData(setSemarLevel, fetchDataSK),
+    setSemarLevel: resetPageAndFetchData(setSemarLevel, fetchDataSTK),
     owner,
-    setOwner: resetPageAndFetchData(setOwner, fetchDataSK),
+    setOwner: resetPageAndFetchData(setOwner, fetchDataSTK),
     status,
-    setStatus: resetPageAndFetchData(setStatus, fetchDataSK),
+    setStatus: resetPageAndFetchData(setStatus, fetchDataSTK),
     currentPageSK,
     setCurrentPageSK,
     currentPageSTK,
@@ -199,6 +209,8 @@ const useSemarData = () => {
     setPageSize,
     totalCountNewSK,
     totalCountNewSTK,
+    selectedSemarType, // Export selectedSemarType
+    handleSetSelectedSemarType, // Export handleSetSelectedSemarType
   };
 };
 

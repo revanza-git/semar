@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   fetchSemarDataById,
   updateSemarData,
@@ -38,6 +39,7 @@ const Details = () => {
   const router = useRouter();
   const params: any = useSearchParams();
   const id = params.get("id");
+  const { data: session } = useSession();
 
   const [semarData, setSemarData] = useState<any>(null);
   const [semarTypes, setSemarTypes] = useState<any[]>([]);
@@ -178,6 +180,9 @@ const Details = () => {
     ? `File: ${semarData.fileName}`
     : "File: none";
 
+  const isEditable =
+    session?.role === "AdminQM" || session?.department === semarData.owner;
+
   return (
     <form onSubmit={handleSubmit}>
       <Card>
@@ -215,6 +220,7 @@ const Details = () => {
                   onChange={handleSelectChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 >
                   {semarTypes.map((type) => (
                     <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
@@ -234,6 +240,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -247,6 +254,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -261,6 +269,7 @@ const Details = () => {
                     onChange={handleSelectChange}
                     fullWidth
                     variant="outlined"
+                    disabled={!isEditable}
                   >
                     {semarLevels.map((level) => (
                       <MenuItem
@@ -284,6 +293,7 @@ const Details = () => {
                   onChange={handleSelectChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 >
                   {departments.map((department) => (
                     <MenuItem
@@ -308,6 +318,7 @@ const Details = () => {
                   variant="outlined"
                   multiline
                   rows={4} // You can adjust the number of rows as needed
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -322,6 +333,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -336,6 +348,7 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
@@ -349,27 +362,31 @@ const Details = () => {
                   onChange={handleTextFieldChange}
                   fullWidth
                   variant="outlined"
+                  disabled={!isEditable}
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="file">Upload File</FormLabel>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="file"
-                      type="file"
-                      onChange={handleFileChange}
-                      fullWidth
-                      variant="outlined"
-                      InputLabelProps={{ shrink: true }}
-                      inputProps={{ accept: "application/pdf" }}
-                    />
+            {isEditable && (
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="file">Upload File</FormLabel>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="file"
+                        type="file"
+                        onChange={handleFileChange}
+                        fullWidth
+                        variant="outlined"
+                        InputLabelProps={{ shrink: true }}
+                        inputProps={{ accept: "application/pdf" }}
+                        disabled={!isEditable}
+                      />
+                    </Grid>
                   </Grid>
-                </Grid>
-              </FormControl>
-            </Grid>
+                </FormControl>
+              </Grid>
+            )}
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
                 <FormLabel htmlFor="status">Status</FormLabel>
@@ -384,11 +401,13 @@ const Details = () => {
                     value={1}
                     control={<Radio />}
                     label="Aktif"
+                    disabled={!isEditable}
                   />
                   <FormControlLabel
                     value={2}
                     control={<Radio />}
                     label="Tidak Aktif"
+                    disabled={!isEditable}
                   />
                 </RadioGroup>
               </FormControl>
@@ -411,18 +430,20 @@ const Details = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Box textAlign="right" mt={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  color={isSubmitting ? "warning" : "primary"}
-                >
-                  {isSubmitting ? <CircularProgress size={24} /> : "Save"}
-                </Button>
-              </Box>
-            </Grid>
+            {isEditable && (
+              <Grid item xs={12}>
+                <Box textAlign="right" mt={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting}
+                    color={isSubmitting ? "warning" : "primary"}
+                  >
+                    {isSubmitting ? <CircularProgress size={24} /> : "Save"}
+                  </Button>
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </CardContent>
       </Card>

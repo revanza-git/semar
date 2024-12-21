@@ -56,7 +56,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           aria-label="menu"
           onClick={toggleMobileSidebar}
           sx={{
-            color: "#fff",
+            color: "#000",
             display: {
               lg: "none",
               xs: "flex",

@@ -8,8 +8,10 @@ import {
   ListItemText,
   useTheme,
   ListItemButton,
+  SxProps,
 } from "@mui/material";
 import Link from "next/link";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 type NavGroup = {
   [x: string]: any;
@@ -19,6 +21,7 @@ type NavGroup = {
   title?: string;
   icon?: any;
   href?: any;
+  subItems?: NavGroup[];
   onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
 };
 
@@ -28,12 +31,21 @@ interface ItemType {
   hideMenu?: any;
   level?: number | any;
   pathDirect: string;
+  sx?: SxProps;
+  isOpen?: boolean;
 }
 
-const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
+const NavItem = ({
+  item,
+  level,
+  pathDirect,
+  onClick,
+  sx,
+  isOpen,
+}: ItemType) => {
   const Icon = item.icon;
   const theme = useTheme();
-  const itemIcon = <Icon stroke={1.5} size="1.3rem" />;
+  const itemIcon = Icon ? <Icon stroke={1.5} size="1.3rem" /> : null;
 
   const ListItemStyled = styled(ListItem)(() => ({
     padding: 0,
@@ -70,6 +82,7 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
           selected={pathDirect === item.href}
           target={item.external ? "_blank" : ""}
           onClick={onClick}
+          sx={sx}
         >
           <ListItemIcon
             sx={{
@@ -83,6 +96,7 @@ const NavItem = ({ item, level, pathDirect, onClick }: ItemType) => {
           <ListItemText>
             <>{item.title}</>
           </ListItemText>
+          {item.subItems ? isOpen ? <ExpandLess /> : <ExpandMore /> : null}
         </ListItemButton>
       </ListItemStyled>
     </List>

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { downloadTemplateFile } from "../api/template";
+import { useSession } from "next-auth/react";
 
 const TemplateTableRow = React.memo(
   ({
@@ -31,6 +32,7 @@ const TemplateTableRow = React.memo(
     router: any;
     handleDeleteSemarTemplate(id: string): void;
   }) => {
+    const { data: session } = useSession();
     const [anchorEl, setAnchorEl] = useState<null | Element>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [deleteTemplateId, setDeleteTemplateId] = useState<string | null>(
@@ -143,24 +145,28 @@ const TemplateTableRow = React.memo(
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem
-                onClick={() =>
-                  router.push(
-                    `/detail-template?id=${template.semarTemplateCode}`
-                  )
-                }
-              >
-                Edit
-              </MenuItem>
+              {session?.role === "AdminQM" && (
+                <>
+                  <MenuItem
+                    onClick={() =>
+                      router.push(
+                        `/detail-template?id=${template.semarTemplateCode}`
+                      )
+                    }
+                  >
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleOpenDialog(template.semarTemplateCode)}
+                  >
+                    Delete
+                  </MenuItem>
+                </>
+              )}
               <MenuItem
                 onClick={() => handleDownloadFile(template.semarTemplateCode)}
               >
                 Download File
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleOpenDialog(template.semarTemplateCode)}
-              >
-                Delete
               </MenuItem>
             </Menu>
           </TableCell>

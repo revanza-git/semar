@@ -18,10 +18,12 @@ import BaseCard from "../components/shared/DashboardCard";
 import TemplateTable from "./components/TemplateTable";
 import useTemplateData from "./hook/useTemplateData"; // Adjust the import path as needed
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
 
   const {
     templateData,
@@ -31,8 +33,8 @@ const Page = () => {
     year,
     setYear,
     fetchData,
-    status,
-    setStatus,
+    docStatus,
+    setDocStatus,
     currentPage,
     setCurrentPage,
     totalCount,
@@ -68,13 +70,15 @@ const Page = () => {
             </Link>
             <Typography color="textPrimary">Template</Typography>
           </Breadcrumbs>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddNewTemplate}
-          >
-            Tambah Template Baru
-          </Button>
+          {!loading && session?.role === "AdminQM" && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddNewTemplate}
+            >
+              Tambah Template Baru
+            </Button>
+          )}
         </Box>
         <Grid container spacing={2} mt={2}>
           <Grid item xs={12} sm={6} md={4}>
@@ -88,7 +92,6 @@ const Page = () => {
           <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel>Tipe Dokumen</InputLabel>
-
               <Select
                 value={tipeDokumen || ""}
                 onChange={(e) => setTipeDokumen(e.target.value)}
@@ -97,12 +100,9 @@ const Page = () => {
                 <MenuItem value="">
                   <em>Semua</em>
                 </MenuItem>
-                {semarTypes.map((semarTypes) => (
-                  <MenuItem
-                    key={semarTypes.semarTypeID}
-                    value={semarTypes.semarTypeID}
-                  >
-                    {semarTypes.deskripsi}
+                {semarTypes.map((type) => (
+                  <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
+                    {type.deskripsi}
                   </MenuItem>
                 ))}
               </Select>
@@ -124,9 +124,9 @@ const Page = () => {
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
-                value={status || ""}
-                onChange={(e) => setStatus(e.target.value)}
-                label="Status"
+                value={docStatus || ""}
+                onChange={(e) => setDocStatus(e.target.value)}
+                label="docStatus"
               >
                 <MenuItem value="">
                   <em>Semua</em>

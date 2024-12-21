@@ -3,8 +3,6 @@
 // Report/Page.tsx
 import React, { useState } from "react";
 import {
-  Alert,
-  IconButton,
   Box,
   TextField,
   Button,
@@ -17,14 +15,16 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import BaseCard from "../components/shared/DashboardCard";
 import ActivityTable from "../components/dashboard/Report/components/ActivityTable";
 import useSemarData from "../components/dashboard/Report/hooks/useSemarData";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Page = () => {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
   const [open, setOpen] = useState(true);
 
   const {
@@ -41,15 +41,15 @@ const Page = () => {
     setNoDocument,
     title,
     setTitle,
-    semarLevel,
-    setSemarLevel,
     owner,
     setOwner,
-    status,
+    status: docStatus,
     setStatus,
     currentPageSTK,
     setCurrentPageSTK,
     totalCountSTK,
+    selectedSemarType, // Destructure selectedSemarType
+    handleSetSelectedSemarType, // Destructure handleSetSelectedSemarType
   } = useSemarData();
 
   const pageSize = 5; // Limit data to only 10 items per page
@@ -72,15 +72,36 @@ const Page = () => {
             </Link>
             <Typography color="textPrimary">STK</Typography>
           </Breadcrumbs>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddNewDocument}
-          >
-            Tambah Dokumen Baru
-          </Button>
+          {!loading && session?.role === "AdminQM" && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddNewDocument}
+            >
+              Tambah Dokumen Baru
+            </Button>
+          )}
         </Box>
         <Grid container spacing={2} mt={2}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <FormControl fullWidth>
+              <InputLabel>Tipe Dokumen</InputLabel>
+              <Select
+                value={selectedSemarType || ""}
+                onChange={(e) =>
+                  handleSetSelectedSemarType(Number(e.target.value))
+                }
+                label="Tipe Dokumen"
+              >
+                <MenuItem value="">
+                  <em>Semua</em>
+                </MenuItem>
+                <MenuItem value={2}>TKO</MenuItem>
+                <MenuItem value={3}>TKI</MenuItem>
+                <MenuItem value={4}>TKPA</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <TextField
               label="Start Date"
@@ -126,7 +147,6 @@ const Page = () => {
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <FormControl fullWidth>
               <InputLabel>Fungsi</InputLabel>
-
               <Select
                 value={owner || ""}
                 onChange={(e) => setOwner(e.target.value)}
@@ -150,7 +170,7 @@ const Page = () => {
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
               <Select
-                value={status || ""}
+                value={docStatus || ""}
                 onChange={(e) => setStatus(e.target.value)}
                 label="Status"
               >
