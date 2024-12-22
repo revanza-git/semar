@@ -65,6 +65,14 @@ const Page = () => {
           justifyContent="space-between"
           alignItems="center"
           mb={2}
+          sx={{
+            "&[inert]": {
+              pointerEvents: "none",
+              userSelect: "none",
+              opacity: 0.5,
+            },
+          }}
+          {...(loading && { inert: "true" })}
         >
           <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" onClick={() => router.push("/")}>

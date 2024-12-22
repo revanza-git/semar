@@ -39,7 +39,6 @@ const Page = () => {
   useEffect(() => {
     setPageSize(3);
     setDataLimit(10);
-    console.log(session);
   }, [setPageSize, setDataLimit]);
 
   const handleAddNewDocument = () => {

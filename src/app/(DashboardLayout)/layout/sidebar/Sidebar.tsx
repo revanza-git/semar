@@ -1,5 +1,6 @@
 import { useMediaQuery, Box, Drawer } from "@mui/material";
 import DarkLogo from "../shared/logo/LogoDark";
+import Logo from "../shared/logo/Logo";
 import SidebarItems from "./SidebarItems";
 
 interface ItemType {
@@ -87,7 +88,7 @@ const Sidebar = ({
       {/* Logo */}
       {/* ------------------------------------------- */}
       <Box px={2}>
-        <DarkLogo />
+        <Logo />
       </Box>
       {/* ------------------------------------------- */}
       {/* Sidebar For Mobile */}

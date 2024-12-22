@@ -6,6 +6,8 @@ import {
   useTheme,
   Alert,
   IconButton,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect, useState } from "react";
@@ -15,11 +17,7 @@ import Footer from "./layout/footer/page";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const MainWrapper = styled("div")(() => ({
-  // display: "flex",
-  // minHeight: "100vh",
-  // width: "100%",
-}));
+const MainWrapper = styled("div")(() => ({}));
 
 const PageWrapper = styled("div")(() => ({
   display: "flex",
@@ -42,9 +40,9 @@ export default function RootLayout({
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isAlertOpen, setAlertOpen] = useState(true);
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const { data: session, status } = useSession();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -53,20 +51,39 @@ export default function RootLayout({
     }
   }, [session, status, router]);
 
+  useEffect(() => {
+    const handleStart = () => setLoading(true);
+    const handleComplete = () => setLoading(false);
+
+    // Handle navigation directly with state changes
+    const observeRouteChange = async () => {
+      setLoading(true);
+      await router.isReady; // Wait until the route is fully ready
+      setLoading(false);
+    };
+
+    observeRouteChange();
+
+    return () => setLoading(false);
+  }, [router.isReady]);
+
   if (status === "loading") return <div>Loading...</div>;
-  // If user is not authenticated, don't render the MainWrapper
-  if (!session) return null; // Loading state
+  if (!session) return null; // Loading state for unauthenticated users
 
   return (
     <MainWrapper className="mainwrapper">
-      {/* ------------------------------------------- */}
+      {/* Loading Indicator */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       {/* Header */}
-      {/* ------------------------------------------- */}
       <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
 
-      {/* ------------------------------------------- */}
-      {/* page Wrapper */}
-      {/* ------------------------------------------- */}
+      {/* Page Wrapper */}
       <PageWrapper
         className="page-wrapper"
         sx={{
@@ -75,27 +92,20 @@ export default function RootLayout({
           },
         }}
       >
-        {/* ------------------------------------------- */}
         {/* Sidebar */}
-        {/* ------------------------------------------- */}
         <Sidebar
           isSidebarOpen={isSidebarOpen}
           isMobileSidebarOpen={isMobileSidebarOpen}
           onSidebarClose={() => setMobileSidebarOpen(false)}
         />
 
-        {/* ------------------------------------------- */}
-        {/* PageContent */}
-        {/* ------------------------------------------- */}
+        {/* Page Content */}
         <Container
           sx={{
             paddingTop: "20px",
             maxWidth: "1200px",
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Page Route */}
-          {/* ------------------------------------------- */}
           <Box mt={2} sx={{ minHeight: "calc(100vh - 170px)" }}>
             {isAlertOpen && (
               <Alert
@@ -110,7 +120,7 @@ export default function RootLayout({
                     <CloseIcon fontSize="inherit" />
                   </IconButton>
                 }
-                sx={{ marginBottom: 2 }} // Add margin bottom
+                sx={{ marginBottom: 2 }}
               >
                 Pemberitahuan! Seluruh dokumen di dalam Portal merupakan dokumen
                 terkendali. dokumen yang diunduh dan atau dicetak dari media
@@ -120,13 +130,8 @@ export default function RootLayout({
             )}
             {children}
           </Box>
-          {/* ------------------------------------------- */}
-          {/* End Page */}
-          {/* ------------------------------------------- */}
 
-          {/* ------------------------------------------- */}
           {/* Footer */}
-          {/* ------------------------------------------- */}
           <Footer />
         </Container>
       </PageWrapper>
