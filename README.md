@@ -48,10 +48,22 @@ mkdir -p inetpub/data/template/semar
 6. **Start the Development Server**
 
 ```sh
+npm run dev
+```
+
+7. **Build the Project**
+
+```sh
+npm run build
+```
+
+8. **Start the Production Server**
+
+```sh
 npm start
 ```
 
-6. **Access the Application**
+9. **Access the Application**
    Open your web browser and navigate to `http://localhost:3000` to access the SEMAR Admin interface.
 
 ## Contributing
