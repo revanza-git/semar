@@ -15,7 +15,7 @@ import Header from "@/app/(DashboardLayout)/layout/header/Header";
 import Sidebar from "@/app/(DashboardLayout)/layout/sidebar/Sidebar";
 import Footer from "./layout/footer/page";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 const MainWrapper = styled("div")(() => ({}));
 
@@ -44,6 +44,8 @@ export default function RootLayout({
   const theme = useTheme();
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (status !== "loading" && !session) {
@@ -55,17 +57,11 @@ export default function RootLayout({
     const handleStart = () => setLoading(true);
     const handleComplete = () => setLoading(false);
 
-    // Handle navigation directly with state changes
-    const observeRouteChange = async () => {
-      setLoading(true);
-      await router.isReady; // Wait until the route is fully ready
-      setLoading(false);
-    };
-
-    observeRouteChange();
+    handleStart();
+    handleComplete();
 
     return () => setLoading(false);
-  }, [router.isReady]);
+  }, [pathname, searchParams]);
 
   if (status === "loading") return <div>Loading...</div>;
   if (!session) return null; // Loading state for unauthenticated users

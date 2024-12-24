@@ -17,6 +17,8 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/navigation";
@@ -142,43 +144,40 @@ const Details = () => {
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
                 <FormLabel htmlFor="usernamePIC">User PIC</FormLabel>
-                <Select
+                <Autocomplete
                   id="usernamePIC"
-                  name="usernamePIC"
-                  value={picData.usernamePIC}
-                  onChange={handleSelectChange}
-                  fullWidth
-                  variant="outlined"
-                >
-                  {users.map((user) => (
-                    <MenuItem key={user.userName} value={user.userName}>
-                      {user.name}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  options={users}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, value) =>
+                    setPICData({
+                      ...picData,
+                      usernamePIC: value?.userName || "",
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} variant="outlined" />
+                  )}
+                />
               </FormControl>
             </Grid>
 
             <Grid item xs={12} md={6}>
               <FormControl fullWidth margin="normal" variant="outlined">
                 <FormLabel htmlFor="departmentPIC">Fungsi</FormLabel>
-                <Select
+                <Autocomplete
                   id="departmentPIC"
-                  name="departmentPIC"
-                  value={picData.departmentPIC}
-                  onChange={handleSelectChange}
-                  fullWidth
-                  variant="outlined"
-                >
-                  {departments.map((department) => (
-                    <MenuItem
-                      key={department.departmentID}
-                      value={department.departmentID}
-                    >
-                      {department.deskripsi}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  options={departments}
+                  getOptionLabel={(option) => option.deskripsi}
+                  onChange={(event, value) =>
+                    setPICData({
+                      ...picData,
+                      departmentPIC: value?.departmentID || "",
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} variant="outlined" />
+                  )}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12}>
