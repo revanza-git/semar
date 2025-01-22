@@ -21,6 +21,12 @@ import useSemarData from "../components/dashboard/Report/hooks/useSemarData";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+interface SemarType {
+  semarTypeID: number;
+  deskripsi: string;
+  type: string;
+}
+
 const Page = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -51,6 +57,8 @@ const Page = () => {
     selectedSemarType, // Destructure selectedSemarType
     handleSetSelectedSemarType, // Destructure handleSetSelectedSemarType
   } = useSemarData();
+
+  console.log(semarTypes);
 
   const pageSize = 5; // Limit data to only 10 items per page
   const handleAddNewDocument = () => {
@@ -104,9 +112,13 @@ const Page = () => {
                 <MenuItem value="">
                   <em>Semua</em>
                 </MenuItem>
-                <MenuItem value={2}>TKO</MenuItem>
-                <MenuItem value={3}>TKI</MenuItem>
-                <MenuItem value={4}>TKPA</MenuItem>
+                {semarTypes
+                  .filter((type: SemarType) => type.type === "STK")
+                  .map((type: SemarType) => (
+                    <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
+                      {type.deskripsi}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Grid>

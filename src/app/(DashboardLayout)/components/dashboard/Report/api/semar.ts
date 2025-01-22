@@ -5,6 +5,7 @@ export const fetchSemarData = async (
   startDate: Date | null = null,
   endDate: Date | null = null,
   searchInput = "",
+  categoryType?: string,
   types?: number[],
   noDocument?: string,
   title?: string,
@@ -57,6 +58,10 @@ export const fetchSemarData = async (
 
   if (dataLimit !== undefined) {
     queryParams.dataLimit = dataLimit.toString();
+  }
+
+  if (categoryType) {
+    queryParams.categoryType = categoryType;
   }
 
   const urlSearchParams = new URLSearchParams(queryParams);
