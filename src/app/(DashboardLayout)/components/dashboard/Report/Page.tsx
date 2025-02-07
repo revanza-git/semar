@@ -49,10 +49,6 @@ const Page = () => {
     setDataLimit(10);
   }, [setPageSize, setDataLimit]);
 
-  const handleAddNewDocument = () => {
-    router.push("/create"); // Navigate to the create page
-  };
-
   return (
     <BaseCard>
       <>
@@ -67,13 +63,6 @@ const Page = () => {
               Home
             </Link>
           </Breadcrumbs>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddNewDocument}
-          >
-            Tambah Dokumen Baru
-          </Button>
         </Box>
         <Grid container spacing={2} mt={2}>
           <Grid item xs={12} sm={6} md={4} lg={3}>

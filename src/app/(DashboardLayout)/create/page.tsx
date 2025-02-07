@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   createSemarData,
   uploadSemarFile,
@@ -34,6 +35,7 @@ import {
 
 const Create = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [semarData, setSemarData] = useState<any>({
     type: "",
@@ -55,6 +57,7 @@ const Create = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
+  // Fetch Semar Types
   useEffect(() => {
     const fetchTypes = async () => {
       try {
@@ -67,6 +70,7 @@ const Create = () => {
     fetchTypes();
   }, []);
 
+  // Fetch Departments
   useEffect(() => {
     const fetchDepartmentsData = async () => {
       try {
@@ -79,6 +83,7 @@ const Create = () => {
     fetchDepartmentsData();
   }, []);
 
+  // Fetch Semar Levels
   useEffect(() => {
     const fetchSemarLevelsData = async () => {
       try {
@@ -91,28 +96,33 @@ const Create = () => {
     fetchSemarLevelsData();
   }, []);
 
+  // Handle Semar Level based on Type
   useEffect(() => {
     if (semarData && semarData.type !== 5) {
       setSemarData((prevData: any) => ({ ...prevData, semarLevel: 0 }));
     }
   }, [semarData?.type]);
 
+  // Handle Text Field Change
   const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSemarData({ ...semarData, [name]: value });
   };
 
+  // Handle Select Change
   const handleSelectChange = (e: SelectChangeEvent<any>) => {
     const { name, value } = e.target;
     setSemarData({ ...semarData, [name]: value });
   };
 
+  // Handle File Change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
   };
 
+  // Handle Form Submit
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -171,6 +181,8 @@ const Create = () => {
     }
   };
 
+  const isEditable = semarData.type?.toString() === "5";
+
   return (
     <Box p={3}>
       <form onSubmit={handleSubmit}>
@@ -198,6 +210,7 @@ const Create = () => {
                   <Alert severity="success">{success}</Alert>
                 </Grid>
               )}
+              {/* Type Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="type">Type</FormLabel>
@@ -210,14 +223,44 @@ const Create = () => {
                     variant="outlined"
                     required
                   >
-                    {semarTypes.map((type) => (
-                      <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
-                        {type.deskripsi}
-                      </MenuItem>
-                    ))}
+                    {semarTypes
+                      .filter((type) => session?.role === "AdminQM" || type.type !== "STK")
+                      .map((type) => (
+                        <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
+                          {type.deskripsi}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
+              
+              {/* Semar Level Field */}
+              {semarData.type === 5 && (
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth margin="normal" variant="outlined">
+                    <FormLabel htmlFor="semarLevel">Semar Level</FormLabel>
+                    <Select
+                      id="semarLevel"
+                      name="semarLevel"
+                      value={semarData.semarLevel}
+                      onChange={handleSelectChange}
+                      fullWidth
+                      variant="outlined"
+                      disabled={!isEditable}
+                    >
+                      {semarLevels.map((level) => (
+                        <MenuItem
+                          key={level.semarLevelID}
+                          value={level.semarLevelID}
+                        >
+                          {level.deskripsi}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              )}
+              {/* No Document Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="noDocument">No Document</FormLabel>
@@ -232,6 +275,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
+              {/* Title Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="title">Title</FormLabel>
@@ -246,31 +290,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
-              {semarData.type === 5 && (
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth margin="normal" variant="outlined">
-                    <FormLabel htmlFor="semarLevel">Semar Level</FormLabel>
-                    <Select
-                      id="semarLevel"
-                      name="semarLevel"
-                      value={semarData.semarLevel}
-                      onChange={handleSelectChange}
-                      fullWidth
-                      variant="outlined"
-                      required
-                    >
-                      {semarLevels.map((level) => (
-                        <MenuItem
-                          key={level.semarLevelID}
-                          value={level.semarLevelID}
-                        >
-                          {level.deskripsi}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              )}
+              {/* Owner Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="owner">Fungsi</FormLabel>
@@ -294,6 +314,7 @@ const Create = () => {
                   </Select>
                 </FormControl>
               </Grid>
+              {/* Description Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="description">Description</FormLabel>
@@ -310,6 +331,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
+              {/* Publish Date Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="publishDate">Publish Date</FormLabel>
@@ -325,6 +347,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
+              {/* Expired Date Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="expiredDate">Expired Date</FormLabel>
@@ -340,6 +363,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
+              {/* Revision Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="revision">Revision</FormLabel>
@@ -354,6 +378,7 @@ const Create = () => {
                   />
                 </FormControl>
               </Grid>
+              {/* File Upload Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="file">Upload File</FormLabel>
@@ -373,6 +398,7 @@ const Create = () => {
                   </Grid>
                 </FormControl>
               </Grid>
+              {/* Status Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
                   <FormLabel htmlFor="status">Status</FormLabel>
@@ -396,6 +422,7 @@ const Create = () => {
                   </RadioGroup>
                 </FormControl>
               </Grid>
+              {/* Submit Button */}
               <Grid item xs={12}>
                 <Box textAlign="right" mt={2}>
                   <Button
