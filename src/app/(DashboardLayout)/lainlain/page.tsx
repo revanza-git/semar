@@ -34,12 +34,12 @@ const Page = () => {
   const [open, setOpen] = useState(true);
 
   const {
-    stkData,
+    lainlainData,
     startDate,
     setStartDate,
     endDate,
     setEndDate,
-    fetchDataSTK,
+    fetchDataLainlain,
     handleDeleteSemarActivity,
     semarTypes,
     departments,
@@ -51,9 +51,9 @@ const Page = () => {
     setOwner,
     status: docStatus,
     setStatus,
-    currentPageSTK,
-    setCurrentPageSTK,
-    totalCountSTK,
+    currentPageLainlain,
+    setCurrentPageLainlain,
+    totalCountLainlain,
     selectedSemarType, // Destructure selectedSemarType
     handleSetSelectedSemarType, // Destructure handleSetSelectedSemarType
   } = useSemarData();
@@ -84,7 +84,7 @@ const Page = () => {
             <Link color="inherit" onClick={() => router.push("/")}>
               Home
             </Link>
-            <Typography color="textPrimary">STK</Typography>
+            <Typography color="textPrimary">Lain-lain</Typography>
           </Breadcrumbs>
           {!loading && session?.role === "AdminQM" && (
             <Button
@@ -111,7 +111,7 @@ const Page = () => {
                   <em>Semua</em>
                 </MenuItem>
                 {semarTypes
-                  .filter((type: SemarType) => type.type === "STK")
+                  .filter((type: SemarType) => type.type === "LAINLAIN")
                   .map((type: SemarType) => (
                     <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
                       {type.deskripsi}
@@ -204,7 +204,7 @@ const Page = () => {
         <Box mt={4}>
           <ActivityTable
             title="Sistem Tata Kerja"
-            semarData={stkData} // Use skData
+            semarData={lainlainData} // Use skData
             router={router}
             handleDeleteSemarActivity={handleDeleteSemarActivity}
             open={open}
@@ -212,11 +212,11 @@ const Page = () => {
             semarTypes={semarTypes}
             departments={departments}
             pageSize={pageSize} // Set pageSize to 10
-            currentPage={currentPageSTK}
-            setCurrentPage={setCurrentPageSTK}
-            totalCount={totalCountSTK}
-            fetchData={fetchDataSTK}
-            dataLimit={totalCountSTK} // Set dataLimit to 10
+            currentPage={currentPageLainlain}
+            setCurrentPage={setCurrentPageLainlain}
+            totalCount={totalCountLainlain}
+            fetchData={fetchDataLainlain}
+            dataLimit={totalCountLainlain} // Set dataLimit to 10
           />
         </Box>
       </>

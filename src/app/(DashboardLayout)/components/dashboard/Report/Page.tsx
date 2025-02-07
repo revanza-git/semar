@@ -13,12 +13,16 @@ const Page = () => {
   const {
     skNewData,
     stkNewData,
+    engineeringNewData,
+    lainlainNewData,
     startDate,
     setStartDate,
     endDate,
     setEndDate,
     fetchDataSK,
     fetchDataSTK,
+    fetchDataEngineering,
+    fetchDataLainlain,
     handleDeleteSemarActivity,
     semarTypes,
     departments,
@@ -26,15 +30,19 @@ const Page = () => {
     setCurrentPageSK,
     currentPageSTK,
     setCurrentPageSTK,
+    currentPageEngineering,
+    setCurrentPageEngineering,
+    currentPageLainlain,
+    setCurrentPageLainlain,
     dataLimit,
     setDataLimit,
     pageSize,
     setPageSize,
     totalCountNewSK,
     totalCountNewSTK,
+    totalCountNewEngineering,
+    totalCountNewLainlain,
   } = useSemarData();
-
-  const { data: session, status } = useSession();
 
   useEffect(() => {
     setPageSize(3);
@@ -128,6 +136,44 @@ const Page = () => {
             setCurrentPage={setCurrentPageSTK}
             totalCount={totalCountNewSTK}
             fetchData={fetchDataSTK}
+            dataLimit={dataLimit} // Set dataLimit to 10
+          />
+        </Box>
+
+        <Box mt={4}>
+          <ActivityTable
+            title="Engineering Terbaru"
+            semarData={engineeringNewData} // Use stkNewData
+            router={router}
+            handleDeleteSemarActivity={handleDeleteSemarActivity}
+            open={open}
+            setOpen={setOpen}
+            semarTypes={semarTypes}
+            departments={departments}
+            pageSize={pageSize} // Set pageSize to 10
+            currentPage={currentPageEngineering}
+            setCurrentPage={setCurrentPageEngineering}
+            totalCount={totalCountNewEngineering}
+            fetchData={fetchDataEngineering}
+            dataLimit={dataLimit} // Set dataLimit to 10
+          />
+        </Box>
+
+        <Box mt={4}>
+          <ActivityTable
+            title="Lain-lain Terbaru"
+            semarData={lainlainNewData} // Use stkNewData
+            router={router}
+            handleDeleteSemarActivity={handleDeleteSemarActivity}
+            open={open}
+            setOpen={setOpen}
+            semarTypes={semarTypes}
+            departments={departments}
+            pageSize={pageSize} // Set pageSize to 10
+            currentPage={currentPageLainlain}
+            setCurrentPage={setCurrentPageLainlain}
+            totalCount={totalCountNewLainlain}
+            fetchData={fetchDataLainlain}
             dataLimit={dataLimit} // Set dataLimit to 10
           />
         </Box>

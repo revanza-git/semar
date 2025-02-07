@@ -84,7 +84,6 @@ const CreateTemplate = () => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    // Validation
     if (!templateData.namaTemplate || !templateData.tipeDokumen || !file) {
       setError("Please fill in all required fields.");
       setIsSubmitting(false);
@@ -94,7 +93,7 @@ const CreateTemplate = () => {
     try {
       const newTemplateData = {
         ...templateData,
-        modifiedDate: new Date().toISOString(), // Set modifiedDate to current time
+        modifiedDate: new Date().toISOString(),
       };
       const createdTemplate = await createSemarTemplateData(newTemplateData);
 
@@ -122,153 +121,155 @@ const CreateTemplate = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        <CardContent>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" onClick={() => router.push("/")}>
-              Home
-            </Link>
-            <Typography color="textPrimary">Create</Typography>
-          </Breadcrumbs>
-          <Grid container spacing={3} mt={2}>
-            <Grid item xs={12} lg={12}>
-              <Button onClick={() => router.back()}>
-                <ArrowBackIcon />
-              </Button>
-            </Grid>
-            {error && (
-              <Grid item xs={12}>
-                <Alert severity="error">{error}</Alert>
-              </Grid>
-            )}
-            {success && (
-              <Grid item xs={12}>
-                <Alert severity="success">{success}</Alert>
-              </Grid>
-            )}
-
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="namaTemplate">Template Name</FormLabel>
-                <TextField
-                  id="namaTemplate"
-                  name="namaTemplate"
-                  value={templateData.namaTemplate}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                  required
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="tipeDokumen">Document Type</FormLabel>
-                <Select
-                  id="tipeDokumen"
-                  name="tipeDokumen"
-                  value={templateData.tipeDokumen}
-                  onChange={handleSelectChange}
-                  fullWidth
-                  variant="outlined"
-                  required
-                >
-                  {semarTypes.map((type) => (
-                    <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
-                      {type.deskripsi}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="tahun">Year</FormLabel>
-                <TextField
-                  id="tahun"
-                  name="tahun"
-                  type="number"
-                  value={templateData.tahun}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                  required
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="revisi">Revision</FormLabel>
-                <TextField
-                  id="revisi"
-                  name="revisi"
-                  type="number"
-                  value={templateData.revisi}
-                  onChange={handleTextFieldChange}
-                  fullWidth
-                  variant="outlined"
-                  required
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="file">Upload File</FormLabel>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="file"
-                      type="file"
-                      onChange={handleFileChange}
-                      fullWidth
-                      variant="outlined"
-                      InputLabelProps={{ shrink: true }}
-                      inputProps={{ accept: "application/pdf" }}
-                    />
-                  </Grid>
-                </Grid>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal" variant="outlined">
-                <FormLabel htmlFor="status">Status</FormLabel>
-                <RadioGroup
-                  id="status"
-                  name="status"
-                  value={templateData.status}
-                  onChange={handleSelectChange}
-                  row // This makes the radio buttons appear in a row
-                >
-                  <FormControlLabel
-                    value={1}
-                    control={<Radio />}
-                    label="Aktif"
-                  />
-                  <FormControlLabel
-                    value={2}
-                    control={<Radio />}
-                    label="Tidak Aktif"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <Box textAlign="right" mt={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  color={isSubmitting ? "warning" : "primary"}
-                >
-                  {isSubmitting ? <CircularProgress size={24} /> : "Save"}
+    <Box p={3}>
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <CardContent>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link color="inherit" onClick={() => router.push("/")}>
+                Home
+              </Link>
+              <Typography color="textPrimary">Create</Typography>
+            </Breadcrumbs>
+            <Grid container spacing={3} mt={2}>
+              <Grid item xs={12} lg={12}>
+                <Button onClick={() => router.back()} startIcon={<ArrowBackIcon />}>
+                  Back
                 </Button>
-              </Box>
+              </Grid>
+              {error && (
+                <Grid item xs={12}>
+                  <Alert severity="error">{error}</Alert>
+                </Grid>
+              )}
+              {success && (
+                <Grid item xs={12}>
+                  <Alert severity="success">{success}</Alert>
+                </Grid>
+              )}
+
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="namaTemplate">Template Name</FormLabel>
+                  <TextField
+                    id="namaTemplate"
+                    name="namaTemplate"
+                    value={templateData.namaTemplate}
+                    onChange={handleTextFieldChange}
+                    fullWidth
+                    variant="outlined"
+                    required
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="tipeDokumen">Document Type</FormLabel>
+                  <Select
+                    id="tipeDokumen"
+                    name="tipeDokumen"
+                    value={templateData.tipeDokumen}
+                    onChange={handleSelectChange}
+                    fullWidth
+                    variant="outlined"
+                    required
+                  >
+                    {semarTypes.map((type) => (
+                      <MenuItem key={type.semarTypeID} value={type.semarTypeID}>
+                        {type.deskripsi}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="tahun">Year</FormLabel>
+                  <TextField
+                    id="tahun"
+                    name="tahun"
+                    type="number"
+                    value={templateData.tahun}
+                    onChange={handleTextFieldChange}
+                    fullWidth
+                    variant="outlined"
+                    required
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="revisi">Revision</FormLabel>
+                  <TextField
+                    id="revisi"
+                    name="revisi"
+                    type="number"
+                    value={templateData.revisi}
+                    onChange={handleTextFieldChange}
+                    fullWidth
+                    variant="outlined"
+                    required
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="file">Upload File</FormLabel>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="file"
+                        type="file"
+                        onChange={handleFileChange}
+                        fullWidth
+                        variant="outlined"
+                        InputLabelProps={{ shrink: true }}
+                        inputProps={{ accept: "application/pdf" }}
+                      />
+                    </Grid>
+                  </Grid>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                  <FormLabel htmlFor="status">Status</FormLabel>
+                  <RadioGroup
+                    id="status"
+                    name="status"
+                    value={templateData.status}
+                    onChange={handleSelectChange}
+                    row
+                  >
+                    <FormControlLabel
+                      value={1}
+                      control={<Radio />}
+                      label="Aktif"
+                    />
+                    <FormControlLabel
+                      value={2}
+                      control={<Radio />}
+                      label="Tidak Aktif"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Box textAlign="right" mt={2}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting}
+                    color={isSubmitting ? "warning" : "primary"}
+                  >
+                    {isSubmitting ? <CircularProgress size={24} /> : "Save"}
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </form>
+          </CardContent>
+        </Card>
+      </form>
+    </Box>
   );
 };
 

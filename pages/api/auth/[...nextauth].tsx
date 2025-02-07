@@ -126,9 +126,9 @@ const authorizeUser = async (
       id: "1",
       name: "Admin User",
       email: "admin@example.com",
-      role: "",
+      role: "AdminQM",
       department: "321",
-      deskripsi: "Departemen SDM",
+      deskripsi: "QM",
     };
   }
 

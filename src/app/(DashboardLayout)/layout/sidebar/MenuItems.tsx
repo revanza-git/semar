@@ -28,6 +28,18 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
+    title: "Engineering",
+    icon: IconFiles,
+    href: "/engineering",
+  },
+  {
+    id: uniqueId(),
+    title: "Lain-lain",
+    icon: IconFiles,
+    href: "/lainlain",
+  },
+  {
+    id: uniqueId(),
     title: "Template",
     icon: IconFiles,
     href: "/template",
@@ -43,6 +55,12 @@ const Menuitems = [
         title: "PIC",
         icon: IconUser,
         href: "/settings/pic",
+      },
+      {
+        id: uniqueId(),
+        title: "Document Type",
+        icon: IconFiles,
+        href: "/settings/type",
       },
     ],
   },
