@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -44,14 +44,37 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
   fetchData,
   dataLimit,
 }) => {
-  const sortedData = Array.isArray(semarData)
-    ? semarData.sort(
-        (a, b) =>
-          new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
-      )
-    : [];
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
 
-  const currentItems = sortedData;
+  const sortedData = React.useMemo(() => {
+    if (sortConfig !== null) {
+      return [...semarData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return semarData;
+  }, [semarData, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortDirection = (key: string) => {
+    if (!sortConfig) return;
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'ascending' ? '↑' : '↓';
+    }
+  };
 
   const handleNextPage = () => {
     const nextPage = Math.min(
@@ -82,56 +105,62 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('semarID')}>
                 <Typography color="textSecondary" variant="h6">
-                  ID
+                  ID {getSortDirection('semarID')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('jenis')}>
                 <Typography color="textSecondary" variant="h6">
-                  Jenis
+                  Jenis {getSortDirection('jenis')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('fungsi')}>
                 <Typography color="textSecondary" variant="h6">
-                  Fungsi
+                  Fungsi {getSortDirection('fungsi')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('nomor')}>
                 <Typography color="textSecondary" variant="h6">
-                  Nomor
+                  Nomor {getSortDirection('nomor')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('revisi')}>
                 <Typography color="textSecondary" variant="h6">
-                  Revisi
+                  Revisi {getSortDirection('revisi')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('perihal')}>
                 <Typography color="textSecondary" variant="h6">
-                  Perihal
+                  Perihal {getSortDirection('perihal')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('tmtBerlaku')}>
                 <Typography color="textSecondary" variant="h6">
-                  TMT Berlaku
+                  TMT Berlaku {getSortDirection('tmtBerlaku')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('tmtBerakhir')}>
                 <Typography color="textSecondary" variant="h6">
-                  TMT Berakhir
+                  TMT Berakhir {getSortDirection('tmtBerakhir')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('deskripsi')}>
                 <Typography color="textSecondary" variant="h6">
-                  Deskripsi
+                  Deskripsi {getSortDirection('deskripsi')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('status')}>
                 <Typography color="textSecondary" variant="h6">
-                  Status
+                  Jatuh Tempo
                 </Typography>
               </TableCell>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('status')}>
+                <Typography color="textSecondary" variant="h6">
+                  Status 
+                </Typography>
+              </TableCell>
+              
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
                 <Typography color="textSecondary" variant="h6">
                   Actions
@@ -140,7 +169,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentItems.map((activity, index) => (
+            {sortedData.map((activity, index) => (
               <ActivityTableRow
                 key={activity.semarID}
                 activity={activity}

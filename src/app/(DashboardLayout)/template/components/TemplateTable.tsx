@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -41,14 +41,37 @@ const TemplateTable: React.FC<TemplateTableProps> = ({
   pageSize,
   dataLimit,
 }) => {
-  const sortedData = Array.isArray(templateData)
-    ? templateData.sort(
-        (a, b) =>
-          new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
-      )
-    : [];
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
 
-  const currentItems = sortedData;
+  const sortedData = React.useMemo(() => {
+    if (sortConfig !== null) {
+      return [...templateData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return templateData;
+  }, [templateData, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortDirection = (key: string) => {
+    if (!sortConfig) return;
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'ascending' ? '↑' : '↓';
+    }
+  };
 
   const handleNextPage = () => {
     const nextPage = Math.min(
@@ -79,34 +102,34 @@ const TemplateTable: React.FC<TemplateTableProps> = ({
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('semarTemplateCode')}>
                 <Typography color="textSecondary" variant="h6">
-                  Template Code
+                  Template Code {getSortDirection('semarTemplateCode')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('tipe')}>
                 <Typography color="textSecondary" variant="h6">
-                  Tipe
+                  Tipe {getSortDirection('tipe')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('namaTemplate')}>
                 <Typography color="textSecondary" variant="h6">
-                  Nama Template
+                  Nama Template {getSortDirection('namaTemplate')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('tahun')}>
                 <Typography color="textSecondary" variant="h6">
-                  Tahun
+                  Tahun {getSortDirection('tahun')}
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('revisi')}>
                 <Typography color="textSecondary" variant="h6">
-                  Revisi
+                  Revisi 
                 </Typography>
               </TableCell>
-              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+              <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('status')}>
                 <Typography color="textSecondary" variant="h6">
-                  Status
+                  Status 
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
@@ -117,7 +140,7 @@ const TemplateTable: React.FC<TemplateTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentItems.map((template, index) => (
+            {sortedData.map((template, index) => (
               <TemplateTableRow
                 key={template.semarTemplateCode}
                 template={template}

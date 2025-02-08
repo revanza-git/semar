@@ -127,8 +127,20 @@ const authorizeUser = async (
       name: "Admin User",
       email: "admin@example.com",
       role: "AdminQM",
-      department: "321",
+      department: "232",
       deskripsi: "QM",
+    };
+  }
+
+  // Check for hardcoded credentials
+  if (credentials.username === "user" && credentials.password === "user123") {
+    return {
+      id: "2",
+      name: "User",
+      email: "user@example.com",
+      role: "User",
+      department: "321",
+      deskripsi: "SDM",
     };
   }
 

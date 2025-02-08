@@ -85,7 +85,7 @@ const Page = () => {
         <Grid container spacing={2} mt={2}>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <TextField
-              label="Start Date"
+              label="TMT Berlaku"
               type="date"
               InputLabelProps={{ shrink: true }}
               value={startDate ? startDate.toISOString().split("T")[0] : ""}
@@ -97,7 +97,7 @@ const Page = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <TextField
-              label="End Date"
+              label="TMT Akhir"
               type="date"
               InputLabelProps={{ shrink: true }}
               value={endDate ? endDate.toISOString().split("T")[0] : ""}
@@ -109,7 +109,7 @@ const Page = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <TextField
-              label="No Document"
+              label="Nomor Dokumen"
               InputLabelProps={{ shrink: true }}
               value={noDocument}
               onChange={(e) => setNoDocument(e.target.value)}
@@ -118,7 +118,7 @@ const Page = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <TextField
-              label="Title"
+              label="Perihal"
               InputLabelProps={{ shrink: true }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}

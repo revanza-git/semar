@@ -18,6 +18,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { downloadSemarFile } from "../api/semar";
 import { formatDate } from "../../../../../../utils/formatDate";
 import { useSession } from "next-auth/react";
+import dayjs from "dayjs";
 
 const ActivityTableRow = React.memo(
   ({
@@ -97,60 +98,100 @@ const ActivityTableRow = React.memo(
     const formattedPublishDate = formatDate(activity.publishDate);
     const formattedExpiredDate = formatDate(activity.expiredDate);
 
+    const getStatusColor = (expiredDate: string) => {
+      const now = dayjs();
+      const expiration = dayjs(expiredDate);
+      const diffInMonths = expiration.diff(now, "month");
+      const diffInDays = expiration.diff(now, "day");
+
+      if (diffInDays < 0) return "red";
+      if (diffInDays <= 7) return "yellow";
+      if (diffInMonths < 1) return "yellow";
+      if (diffInMonths < 3) return "green";
+      return "green";
+    };
+
+    const statusColor = getStatusColor(activity.expiredDate);
+
     return (
       <>
         <TableRow
           key={activity.semarID}
           sx={{ backgroundColor: index % 2 !== 0 ? "white" : "#f5f5f5" }}
         >
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography color="textSecondary" fontSize="12px">
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
+            <Typography color="textSecondary" fontSize="12px" noWrap title={activity.semarID}>
               {activity.semarID}
             </Typography>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
             <Box display="flex" alignItems="center">
-              <Typography fontSize="12px" fontWeight={600}>
+              <Typography fontSize="12px" fontWeight={600} noWrap title={semarType ? semarType.deskripsi : activity.type}>
                 {semarType ? semarType.deskripsi : activity.type}
               </Typography>
             </Box>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography color="textSecondary" fontSize="12px">
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
+            <Typography color="textSecondary" fontSize="12px" noWrap title={department ? department.deskripsi : activity.owner}>
               {department ? department.deskripsi : activity.owner}
             </Typography>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography fontSize="12px">{activity.noDocument}</Typography>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
+            <Typography fontSize="12px" noWrap title={activity.noDocument}>
+              {activity.noDocument}
+            </Typography>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography fontSize="12px">{activity.revision}</Typography>
-          </TableCell>
-          <TableCell
-            align="left"
-            sx={{
-              width: "100%",
-              border: "1px solid rgba(224, 224, 224, 1)",
-            }}
-          >
-            <Typography fontSize="12px">{activity.title}</Typography>
-          </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography fontSize="12px">{formattedPublishDate}</Typography>
-          </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
-            <Typography fontSize="12px">{formattedExpiredDate}</Typography>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "5%" }}>
+            <Typography fontSize="12px" noWrap title={activity.revision}>
+              {activity.revision}
+            </Typography>
           </TableCell>
           <TableCell
             align="left"
             sx={{
-              width: "100%",
+              width: "15%",
               border: "1px solid rgba(224, 224, 224, 1)",
             }}
           >
-            <Typography fontSize="12px">{activity.description}</Typography>
+            <Typography fontSize="12px" noWrap title={activity.title}>
+              {activity.title}
+            </Typography>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
+            <Typography fontSize="12px" noWrap title={formattedPublishDate}>
+              {formattedPublishDate}
+            </Typography>
+          </TableCell>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "10%" }}>
+            <Typography fontSize="12px" noWrap title={formattedExpiredDate}>
+              {formattedExpiredDate}
+            </Typography>
+          </TableCell>
+          <TableCell
+            align="left"
+            sx={{
+              width: "15%",
+              border: "1px solid rgba(224, 224, 224, 1)",
+            }}
+          >
+            <Typography fontSize="12px" noWrap title={activity.description}>
+              {activity.description}
+            </Typography>
+          </TableCell>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "5%" }}>
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <Box
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  backgroundColor: statusColor,
+                  mr: 1,
+                }}
+              />
+            </Box>
+          </TableCell>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "5%" }}>
             <Box display="flex" alignItems="center" justifyContent="center">
               <Box
                 sx={{
@@ -168,7 +209,7 @@ const ActivityTableRow = React.memo(
               />
             </Box>
           </TableCell>
-          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}>
+          <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)", width: "5%" }}>
             <IconButton onClick={handleMenuClick(activity.semarID)}>
               <MoreVertIcon />
             </IconButton>

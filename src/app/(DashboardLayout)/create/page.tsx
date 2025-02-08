@@ -213,7 +213,7 @@ const Create = () => {
               {/* Type Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="type">Type</FormLabel>
+                  <FormLabel htmlFor="type">Tipe Dokumen</FormLabel>
                   <Select
                     id="type"
                     name="type"
@@ -238,7 +238,7 @@ const Create = () => {
               {semarData.type === 5 && (
                 <Grid item xs={12} md={6}>
                   <FormControl fullWidth margin="normal" variant="outlined">
-                    <FormLabel htmlFor="semarLevel">Semar Level</FormLabel>
+                    <FormLabel htmlFor="semarLevel">SK Level</FormLabel>
                     <Select
                       id="semarLevel"
                       name="semarLevel"
@@ -263,7 +263,7 @@ const Create = () => {
               {/* No Document Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="noDocument">No Document</FormLabel>
+                  <FormLabel htmlFor="noDocument">Nomor Dokumen</FormLabel>
                   <TextField
                     id="noDocument"
                     name="noDocument"
@@ -278,7 +278,7 @@ const Create = () => {
               {/* Title Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="title">Title</FormLabel>
+                  <FormLabel htmlFor="title">Perihal</FormLabel>
                   <TextField
                     id="title"
                     name="title"
@@ -317,7 +317,7 @@ const Create = () => {
               {/* Description Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="description">Description</FormLabel>
+                  <FormLabel htmlFor="description">Deskripsi</FormLabel>
                   <TextField
                     id="description"
                     name="description"
@@ -334,7 +334,7 @@ const Create = () => {
               {/* Publish Date Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="publishDate">Publish Date</FormLabel>
+                  <FormLabel htmlFor="publishDate">TMT Berlaku</FormLabel>
                   <TextField
                     id="publishDate"
                     name="publishDate"
@@ -350,7 +350,7 @@ const Create = () => {
               {/* Expired Date Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="expiredDate">Expired Date</FormLabel>
+                  <FormLabel htmlFor="expiredDate">TMT Akhir</FormLabel>
                   <TextField
                     id="expiredDate"
                     name="expiredDate"
@@ -366,7 +366,7 @@ const Create = () => {
               {/* Revision Field */}
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth margin="normal" variant="outlined">
-                  <FormLabel htmlFor="revision">Revision</FormLabel>
+                  <FormLabel htmlFor="revision">Revisi</FormLabel>
                   <TextField
                     id="revision"
                     name="revision"
