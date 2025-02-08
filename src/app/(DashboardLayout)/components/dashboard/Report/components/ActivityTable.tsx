@@ -152,7 +152,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('status')}>
                 <Typography color="textSecondary" variant="h6">
-                  Jatuh Tempo
+                  Masa Berlaku
                 </Typography>
               </TableCell>
               <TableCell sx={{ border: "1px solid rgba(224, 224, 224, 1)" }} onClick={() => requestSort('status')}>
