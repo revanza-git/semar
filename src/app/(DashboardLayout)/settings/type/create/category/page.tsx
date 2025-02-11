@@ -99,8 +99,12 @@ const CreateCategory = () => {
     try {
       await deleteCategory(selectedCategory);
       setSuccess("Category Successfully Deleted");
+      setSelectedCategory(""); // Reset selection
       setOpen(false);
-      setCategory(category.filter(c => c.semarTypeCategoryCode !== selectedCategory));
+  
+      // Refresh the category list
+      const updatedCategories = await fetchCategories();
+      setCategory(updatedCategories);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -206,8 +210,8 @@ const CreateCategory = () => {
               >
                 {category.map((c: any) => (
                   <MenuItem
-                    key={c.semarTypeCategoryCode}
-                    value={c.semarTypeCategoryCode}
+                    key={c.semarTypeCategoryID}
+                    value={c.semarTypeCategoryID}
                   >
                     {c.deskripsi}
                   </MenuItem>

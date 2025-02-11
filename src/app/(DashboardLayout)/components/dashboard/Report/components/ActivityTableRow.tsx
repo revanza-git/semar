@@ -55,9 +55,15 @@ const ActivityTableRow = React.memo(
       try {
         const blob = await downloadSemarFile(semarID);
         const url = window.URL.createObjectURL(blob);
+
+        // Create a filename like "noDocument_title.pdf" with underscores for spaces
+        const safeNoDocument = activity.noDocument.replace(/\s+/g, "_");
+        const safeTitle = activity.title.replace(/\s+/g, "_");
+        const fileName = `${safeNoDocument}_${safeTitle}.pdf`;
+
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${activity.fileName}`;
+        a.download = fileName;
         document.body.appendChild(a);
         a.click();
         a.remove();
