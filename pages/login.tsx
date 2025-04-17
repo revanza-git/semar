@@ -7,8 +7,12 @@ import {
   TextField,
   Typography,
   styled,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
 } from "@mui/material";
-
+import CloseIcon from "@mui/icons-material/Close";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -19,7 +23,6 @@ const StyledCard = styled(Card)({
   paddingBottom: "3rem",
   borderRadius: "20px",
   "@media (max-width:600px)": {
-    // Move the card up in mobile view
     marginLeft: "20px",
     marginRight: "20px",
   },
@@ -31,10 +34,10 @@ const StyledImg = styled("img")({
   left: "40px",
   width: "200px",
   "@media (max-width:600px)": {
-    width: "300px", // Increase the size of the logo in mobile view
+    width: "300px",
     top: "50px",
     left: "50%",
-    transform: "translateX(-50%)", // Center the logo
+    transform: "translateX(-50%)",
   },
 });
 
@@ -45,10 +48,26 @@ export default function Login() {
   const passwordFieldRef = useRef<HTMLInputElement>(null);
   const [buttonWidth, setButtonWidth] = useState<number | undefined>(undefined);
   const [authFailed, setAuthFailed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // New state for loading indicator
+  const [isLoading, setIsLoading] = useState(false);
   const [callbackUrl, setCallbackUrl] = useState("");
 
+  // Awareness popup state
+  const [open, setOpen] = useState(true);
+  const [awarenessImages, setAwarenessImages] = useState<string[]>([]);
+  const [randomImage, setRandomImage] = useState<string>("");
+  const basePath = process.env.NEXT_PUBLIC_BASEPATH || "";
+
   useEffect(() => {
+    // Fetch awareness images from API
+    fetch(`${basePath}/api/awareness-images`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.images && data.images.length > 0) {
+          setAwarenessImages(data.images);
+          const rand = data.images[Math.floor(Math.random() * data.images.length)];
+          setRandomImage(`${basePath}/images/awareness/${rand}`);
+        }
+      });
     if (passwordFieldRef.current) {
       setButtonWidth(passwordFieldRef.current.offsetWidth);
     }
@@ -88,15 +107,15 @@ export default function Login() {
   const handleLogin = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      setIsLoading(true); // Start loading
+      setIsLoading(true);
       signIn("credentials", {
         username,
         password,
-        callbackUrl, // Ensure callbackUrl includes base path
+        callbackUrl,
       })
         .then((result) => {
           if (result && result.error) {
-            console.error("Login error:", result.error); // Log the error
+            console.error("Login error:", result.error);
             setAuthFailed(true);
           } else {
             getSession().then((session) => {
@@ -109,11 +128,11 @@ export default function Login() {
           }
         })
         .catch((error) => {
-          console.error("Login error:", error); // Log the error
+          console.error("Login error:", error);
           setAuthFailed(true);
         })
         .finally(() => {
-          setIsLoading(false); // Stop loading regardless of the outcome
+          setIsLoading(false);
         });
     },
     [username, password, callbackUrl, router]
@@ -121,6 +140,28 @@ export default function Login() {
 
   return (
     <div>
+      {/* Awareness Popup */}
+      <Dialog open={open && !!randomImage} onClose={() => setOpen(false)}>
+        <DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpen(false)}
+            style={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {randomImage && (
+            <img
+              src={randomImage}
+              alt="Awareness"
+              style={{ maxWidth: "100%", display: "block", margin: "0 auto" }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Grid
         container
         justifyContent="flex-end"
@@ -129,7 +170,7 @@ export default function Login() {
           height: "100vh",
           backgroundImage: "url('images/backgrounds/nr-bg.png')",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "contain", // Change this line
+          backgroundSize: "contain",
         }}
       >
         <StyledImg src="images/logos/nr-logo.png" alt="Logo" loading="lazy" />
