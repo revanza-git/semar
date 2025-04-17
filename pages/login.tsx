@@ -108,10 +108,12 @@ export default function Login() {
     (event: React.FormEvent) => {
       event.preventDefault();
       setIsLoading(true);
+      const basePath = process.env.NEXT_PUBLIC_BASEPATH || "/portal/semar";
+      const redirectUrl = callbackUrl || basePath;
       signIn("credentials", {
         username,
         password,
-        callbackUrl,
+        callbackUrl: redirectUrl,
       })
         .then((result) => {
           if (result && result.error) {
@@ -122,7 +124,7 @@ export default function Login() {
               if (session === null) {
                 setAuthFailed(true);
               } else {
-                router.push(callbackUrl);
+                router.push(redirectUrl);
               }
             });
           }
