@@ -176,7 +176,7 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: `${process.env.NEXT_PUBLIC_BASEPATH || "/portal/semar"}/login`,
   },
   callbacks: {
     async session({ session, token }) {
@@ -196,6 +196,15 @@ export default NextAuth({
         token.deskripsi = user.deskripsi;
       }
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      const basePath = process.env.NEXT_PUBLIC_BASEPATH || "/portal/semar";
+      // Only allow redirects within the app's base path
+      if (url.startsWith(basePath)) return url;
+      // If url is a relative path, prefix with basePath
+      if (url.startsWith("/")) return basePath + url;
+      // Default: always redirect to basePath
+      return basePath;
     },
   },
 });
