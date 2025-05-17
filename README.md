@@ -4,10 +4,18 @@ Welcome to the SEMAR Admin project! This README will guide you through the setup
 
 ## Project Overview
 
-SEMAR is a comprehensive dashboard designed to manage policy documents for the NR organization. It provides a modern, user-friendly interface for document management, policy tracking, and administrative tasks.
+SEMAR is a comprehensive dashboard designed to manage policy documents. It provides a modern, user-friendly interface for document management, policy tracking, and administrative tasks.
 
 ![SEMAR Dashboard Overview](public/semar0.jpg)
 ![SEMAR Document Management](public/semar1.jpg)
+
+## Important Notice
+
+This project was originally developed for internal use. If you plan to use or modify this project for your own purposes, please note:
+- Remove or replace any company-specific branding and trademarks
+- Update all references to "NR" or "Nusantara Regas" with your own organization's information
+- Modify the authentication and authorization system according to your needs
+- Update the contact information and support details
 
 ## Key Features
 
@@ -91,7 +99,7 @@ mkdir -p inetpub/data/template/semar
 ```
 
 5. **Database Setup**
-   Contact IT of Nusantara Regas for:
+   Contact your system administrator for:
    - Database migration scripts
    - Initial data seeding
    - Access credentials
@@ -123,19 +131,16 @@ semar/
 
 ## Contributing
 
-We welcome contributions! Please contact your IT support if you want to contribute.
+We welcome contributions! Please contact me if you want to contribute.
 
 ## License
 
-This project is proprietary of Nusantara Regas Corporation.
+This project is proprietary of Revanza Raytama.
 
 ## Contact
 
 For technical support or inquiries:
 - Email: [revanza.raytama@gmail.com](mailto:revanza.raytama@gmail.com)
 - LinkedIn: [linkedin.com/in/revanzaraytama](https://linkedin.com/in/revanzaraytama)
-
-For internal support:
-- Email: [it.supportnr@pertamina.com](mailto:it.supportnr@pertamina.com)
 
 Thank you for using SEMAR Admin!
