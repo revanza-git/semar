@@ -170,12 +170,12 @@ export default function Login() {
         alignItems="center"
         style={{
           height: "100vh",
-          backgroundImage: "url('images/backgrounds/nr-bg.png')",
+          backgroundImage: "url('images/backgrounds/login-bg.png')",
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
         }}
       >
-        <StyledImg src="images/logos/nr-logo.png" alt="Logo" loading="lazy" />
+        <StyledImg src="images/logos/logo.png" alt="Logo" loading="lazy" />
 
         <Grid item xs={12} sm={8} md={6} lg={4}>
           <StyledCard>

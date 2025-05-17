@@ -7,15 +7,7 @@ const Footer = () => {
   return (
     <Box sx={{ pt: 6, textAlign: "center" }}>
       <Typography>
-        © {new Date().getFullYear()} All rights reserved by{" "}
-        <Link
-          href="http://nregas.pertamina.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Nusantara Regas
-        </Link>{" "}
-        | Semar Version 2.0.0
+        © {new Date().getFullYear()} All rights reserved | Semar Version 2.0.0
       </Typography>
     </Box>
   );

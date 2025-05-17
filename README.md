@@ -86,9 +86,20 @@ npm install
 3. **Environment Configuration**
    Create a `.env` file in the root directory with the following variables:
    ```
+   # Application
+   NEXT_PUBLIC_BASEPATH=/portal/semar
+   NODE_ENV=development
+
+   # Authentication
    NEXTAUTH_URL=http://localhost:3000
    NEXTAUTH_SECRET=your-secret-key
+
+   # Database
    DATABASE_URL=your-database-connection-string
+
+   # Server
+   HOST=localhost
+   PORT=3000
    ```
 
 4. **Configure Upload Directories**

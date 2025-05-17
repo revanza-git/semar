@@ -15,7 +15,7 @@ const Logo = () => {
   return (
     <LinkStyled href="/">
       <Image
-        src={`${basePath}/images/logos/nr-logo.png`}
+        src={`${basePath}/images/logos/logo.png`}
         alt="logo"
         height={64}
         width={174}
